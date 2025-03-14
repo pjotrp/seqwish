@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <sstream>
-#include "atomic_queue.h"
+#include "atomic_queue/atomic_queue.h"
 #include "mmiitree.hpp"
 #include "mmmultiset.hpp"
 #include "seqindex.hpp"

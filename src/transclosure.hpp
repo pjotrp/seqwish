@@ -16,7 +16,7 @@
 #include "ips4o.hpp"
 #include "spinlock.hpp"
 #include "dset64-gccAtomic.hpp"
-#include "atomic_queue.h"
+#include "atomic_queue/atomic_queue.h"
 #include "time.hpp"
 #include "wang.hpp"
 #include "paryfor.hpp"
