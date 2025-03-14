@@ -1,18 +1,9 @@
 [submodule "contrib/atomicbitvector"]
        path = contrib/atomicbitvector
        url = https://github.com/ekg/atomicbitvector.git
-[submodule "contrib/args"]
-	path = contrib/args
-	url = https://github.com/Taywee/args.git
 [submodule "contrib/ips4o"]
 	path = contrib/ips4o
 	url = https://github.com/SaschaWitt/ips4o.git
-[submodule "contrib/atomicbitvector"]
-	path = contrib/atomicbitvector
-	url = https://github.com/ekg/atomicbitvector.git
-[submodule "contrib/atomic_queue"]
-	path = contrib/atomic_queue
-	url = https://github.com/max0x7ba/atomic_queue.git
 [submodule "contrib/flat_hash_map"]
 	path = contrib/flat_hash_map
 	url = https://github.com/skarupke/flat_hash_map
