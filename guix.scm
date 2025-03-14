@@ -11,10 +11,7 @@
 ;;
 ;; To get a development container using a recent guix (see `guix pull`)
 ;;
-;;   guix shell --share=$HOME/.cargo -C -D -F -v 3 -f guix.scm            # default build
-;;   guix shell --share=$HOME/.cargo -L . -C -D -F seqwish-gcc-git         # preferred development container
-;;   guix shell --share=$HOME/.cargo -L . -C -D -F seqwish-gcc-static-git
-;;   guix shell --share=$HOME/.cargo -L . -C -D -F seqwish-clang-git
+;;   guix shell -C -F -L . -D seqwish-gcc-debug-git
 ;;
 ;; and inside the container
 ;;
@@ -179,6 +176,7 @@ commonly encountered when working with large numbers of noisy input sequences.")
                         coreutils
                         util-linux
                         grep
+                        perl ;; for tests
                         ))
     (arguments
      `(#:phases (modify-phases %standard-phases

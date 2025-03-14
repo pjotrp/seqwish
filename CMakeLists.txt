@@ -157,6 +157,11 @@ if (BUILD_STATIC)
   set(CMAKE_EXE_LINKER_FLAGS "-static -Wl,--whole-archive -lpthread -Wl,--no-whole-archive")
 endif()
 
+add_test(
+  NAME seqwish-test
+  COMMAND bash -c "make"
+  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/test)
+
 # version stuff
 file(MAKE_DIRECTORY ${CMAKE_SOURCE_DIR}/include)
 execute_process(COMMAND bash ${CMAKE_SOURCE_DIR}/scripts/generate_git_version.sh ${CMAKE_SOURCE_DIR}/include)
