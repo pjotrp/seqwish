@@ -1,7 +1,5 @@
 #pragma once
 
-#define _REENTRANT
-
 #include <iostream>
 #include <string>
 #include <vector>

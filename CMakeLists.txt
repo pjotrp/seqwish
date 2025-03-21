@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.1)
 
 project(seqwish)
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 
 enable_testing()
 
@@ -51,6 +51,8 @@ if (${CMAKE_BUILD_TYPE} MATCHES Generic)
   set(EXTRA_FLAGS "-O3")
   set(CMAKE_CXX_FLAGS_RELEASE "-DNDEBUG") # reset CXX_FLAGS to replace -O3 with -Ofast
 endif ()
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_REENTRANT") # defined for ips4o::parallel
 
 if (${CMAKE_BUILD_TYPE} MATCHES Debug)
   # Debug use the defaults

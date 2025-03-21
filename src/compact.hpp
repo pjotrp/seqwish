@@ -1,7 +1,5 @@
 #pragma once
 
-#define _REENTRANT // for ips4p::parallel
-
 #include <vector>
 #include "sdsl/bit_vectors.hpp"
 #include "atomic_bitvector.hpp"

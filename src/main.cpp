@@ -1,5 +1,3 @@
-#define _REENTRANT // for ips4p::parallel
-
 #include <iostream>
 #include <cstdint>
 #include <cstdio>
