@@ -1,5 +1,7 @@
 #pragma once
 
+#define _REENTRANT // for ips4p::parallel
+
 #include <string>
 #include <fstream>
 #include <iostream>

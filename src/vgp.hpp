@@ -1,5 +1,5 @@
-#ifndef VGP_HPP_INCLUDED
-#define VGP_HPP_INCLUDED
+#pragma once
+#define _REENTRANT // for ips4p::parallel
 
 #include <iostream>
 #include <sstream>
@@ -23,5 +23,3 @@ void emit_vgp(const std::string& basename,
               seqindex_t& seqidx);
 
 }
-
-#endif

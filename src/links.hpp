@@ -1,5 +1,7 @@
-#ifndef LINKS_HPP_INCLUDED
-#define LINKS_HPP_INCLUDED
+
+#pragma once
+
+#define _REENTRANT // for ips4p::parallel
 
 #include <vector>
 #include <iostream>
@@ -22,5 +24,3 @@ void derive_links(seqindex_t& seqidx,
                   const uint64_t& num_threads);
 
 }
-
-#endif

@@ -23,6 +23,7 @@ find_package(Threads REQUIRED)
 find_package(PkgConfig REQUIRED)
 
 pkg_check_modules(SDSLLITE sdsl-lite)
+pkg_check_modules(TBB tbb)
 pkg_check_modules(atomicqueue atomicqueue)
 
 if(NOT CMAKE_BUILD_TYPE)
@@ -61,34 +62,9 @@ else()
   set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS} ${PIC_FLAG} ${EXTRA_FLAGS}")
 endif ()
 
-if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin") # untested
-  # assumes clang build
-  # we can't reliably detect when we're using clang, so for the time being we assume
-  # TODO: can't we though?
-  # adapted from https://stackoverflow.com/questions/46414660/macos-cmake-and-openmp
-  # find_package(OpenMP) does not work reliably on macOS, so we do its work ourselves
-  set (OpenMP_C "${CMAKE_C_COMPILER}")
-  set (OpenMP_C_FLAGS " -Xpreprocessor -fopenmp -I/opt/local/include/libomp -I/usr/local/include -L/opt/local/lib/libomp -L/usr/local/lib")
-  set (OpenMP_C_LIB_NAMES "libomp" "libgomp" "libiomp5")
-  set (OpenMP_CXX "${CMAKE_CXX_COMPILER}")
-  set (OpenMP_CXX_FLAGS " -Xpreprocessor -fopenmp -I/opt/local/include/libomp -I/usr/local/include -L/opt/local/lib/libomp -L/usr/local/lib")
-  set (OpenMP_CXX_LIB_NAMES "libomp" "libgomp" "libiomp5")
-  set (OpenMP_libomp_LIBRARY "omp")
-  set (OpenMP_libgomp_LIBRARY "gomp")
-  set (OpenMP_libiomp5_LIBRARY "iomp5")
-  # and now add the OpenMP parameters to the compile flags
-  set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
-  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
-  set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS} -lomp")
-elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-  find_package(OpenMP REQUIRED)
-  # add the flags it detects to the compile flags
-  set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS} -fopenmp")
-  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS} -fopenmp")
-  set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
-endif()
+# --- Removed Darwin stuff - as it can probably be done a lot simpler.
 
-# Set the output folder where your program will be created
+# Set the output folder where the program will be created
 set(CMAKE_BINARY_DIR ${CMAKE_SOURCE_DIR}/bin)
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 set(LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/lib)
@@ -96,33 +72,28 @@ set(LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/lib)
 # The following folder will be included
 include_directories("${PROJECT_SOURCE_DIR}")
 
-# Add external projects
-include(${CMAKE_ROOT}/Modules/ExternalProject.cmake)
-
-set(CMAKE_BUILD_TYPE Release)
-
 # set up our target executable and specify its dependencies and includes
 add_executable(seqwish
-  ${CMAKE_SOURCE_DIR}/src/utils.cpp
-  ${CMAKE_SOURCE_DIR}/src/tempfile.cpp
-  ${CMAKE_SOURCE_DIR}/src/main.cpp
-  ${CMAKE_SOURCE_DIR}/src/seqindex.cpp
-  ${CMAKE_SOURCE_DIR}/src/paf.cpp
-  ${CMAKE_SOURCE_DIR}/src/sxs.cpp
-  ${CMAKE_SOURCE_DIR}/src/cigar.cpp
-  ${CMAKE_SOURCE_DIR}/src/alignments.cpp
-  ${CMAKE_SOURCE_DIR}/src/pos.cpp
-  ${CMAKE_SOURCE_DIR}/src/match.cpp
-  ${CMAKE_SOURCE_DIR}/src/transclosure.cpp
-  ${CMAKE_SOURCE_DIR}/src/links.cpp
-  ${CMAKE_SOURCE_DIR}/src/compact.cpp
-  ${CMAKE_SOURCE_DIR}/src/dna.cpp
-  ${CMAKE_SOURCE_DIR}/src/gfa.cpp
-  ${CMAKE_SOURCE_DIR}/src/vgp.cpp
-  ${CMAKE_SOURCE_DIR}/src/exists.cpp
-  ${CMAKE_SOURCE_DIR}/src/time.cpp
-  ${CMAKE_SOURCE_DIR}/src/mmap.cpp
-  ${CMAKE_SOURCE_DIR}/src/version.cpp
+  src/utils.cpp
+  src/tempfile.cpp
+  src/main.cpp
+  src/seqindex.cpp
+  src/paf.cpp
+  src/sxs.cpp
+  src/cigar.cpp
+  src/alignments.cpp
+  src/pos.cpp
+  src/match.cpp
+  src/transclosure.cpp
+  src/links.cpp
+  src/compact.cpp
+  src/dna.cpp
+  src/gfa.cpp
+  src/vgp.cpp
+  src/exists.cpp
+  src/time.cpp
+  src/mmap.cpp
+  src/version.cpp
   )
 
 target_include_directories(seqwish PUBLIC
@@ -131,27 +102,32 @@ target_include_directories(seqwish PUBLIC
   "contrib/mmmulti/src"
   "contrib/mio/include"
   "contrib/atomicbitvector/include"
-  "contrib/ips4o"
+  "contrib/ips4o/include"
   "contrib/flat_hash_map"
   "contrib/paryfor"
   "${tayweeargs_INCLUDE}"
   "${gzipreader_INCLUDE}"
-  "${ips4o_INCLUDE}"
-  "${mmmulti_INCLUDE}"
-  "${iitii_INCLUDE}"
-  "${bbhash_INCLUDE}"
-  "${atomicbitvector_INCLUDE}"
+  # "${ips4o_INCLUDE}"
+  # "${mmmulti_INCLUDE}"
+  # "${iitii_INCLUDE}"
+  # "${bbhash_INCLUDE}"
+  # "${atomicbitvector_INCLUDE}"
   "${atomicqueue_INCLUDE}"
-  "${ska_INCLUDE}"
-  "${paryfor_INCLUDE}"
-  "${mio_INCLUDE}")
+  # "${ska_INCLUDE}"
+  # "${paryfor_INCLUDE}"
+  # "${mio_INCLUDE}"
+)
+
 target_link_libraries(seqwish
   ${SDSLLITE_LINK_LIBRARIES}
+  ${TBB_LINK_LIBRARIES}
   ${LIBDIVSUFSORT_LINK_LIBRARIES}
   "-latomic"
   Threads::Threads
   jemalloc
-  z)
+  z
+)
+
 if (BUILD_STATIC)
   #set(CMAKE_EXE_LINKER_FLAGS "-static")
   set(CMAKE_EXE_LINKER_FLAGS "-static -Wl,--whole-archive -lpthread -Wl,--no-whole-archive")
@@ -160,7 +136,8 @@ endif()
 add_test(
   NAME seqwish-test
   COMMAND bash -c "make"
-  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/test)
+  WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/test
+)
 
 # version stuff
 file(MAKE_DIRECTORY ${CMAKE_SOURCE_DIR}/include)

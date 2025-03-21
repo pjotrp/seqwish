@@ -1,3 +1,5 @@
+#define _REENTRANT // for ips4p::parallel
+
 #include <iostream>
 #include <cstdint>
 #include <cstdio>
@@ -67,7 +69,7 @@ int main(int argc, char** argv) {
 	}
 
     std::chrono::time_point<std::chrono::steady_clock> start_time = std::chrono::steady_clock::now();
-    
+
     size_t num_threads = args::get(thread_count) ? args::get(thread_count) : 1;
     /*
     if (num_threads) {

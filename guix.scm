@@ -91,13 +91,13 @@
   #:use-module (gnu packages python)
   #:use-module (gnu packages rust)
   #:use-module (gnu packages rust-apps) ; for cargo
+  #:use-module (gnu packages tbb)
   #:use-module (gnu packages tls)
   #:use-module (gnu packages version-control)
   #:use-module (srfi srfi-1)
   #:use-module (ice-9 popen)
   #:use-module (ice-9 rdelim)
   )
-
 
 (define %source-dir (dirname (current-filename)))
 
@@ -114,11 +114,13 @@
     (inputs (list
              ;; bash bedtools util-linux samtools ; for testing
              atomic-queue
+             tbb
              sdsl-lite
              libdivsufsort
              jemalloc
              gnu-make
              pkg-config
+             perl
              zlib))
     (arguments
      `(#:tests? #f ;; running tests as profiler
@@ -154,7 +156,8 @@ commonly encountered when working with large numbers of noisy input sequences.")
     (name "seqwish-gcc-git")
     (inputs
      (modify-inputs (package-inputs seqwish-base-git)
-         (append gcc)))))
+                    (append
+                     gcc)))))
 
 (define-public seqwish-gcc-debug-git
   "Build with debug options"
@@ -280,7 +283,6 @@ These binaries can be copied to HPC."
            "-DCMAKE_INSTALL_RPATH=")))   ; force cmake static build and do not rewrite RPATH
     (inputs
      (modify-inputs (package-inputs seqwish-gcc-git)
-                    (delete pafcheck-github)
                     (prepend
                      `(,bzip2 "static")
                      `(,zlib "static")
