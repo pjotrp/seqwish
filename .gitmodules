@@ -3,7 +3,7 @@
        url = https://github.com/ekg/atomicbitvector.git
 [submodule "contrib/ips4o"]
 	path = contrib/ips4o
-	url = https://github.com/SaschaWitt/ips4o.git
+	url = https://github.com/ips4o/ips4o.git
 [submodule "contrib/flat_hash_map"]
 	path = contrib/flat_hash_map
 	url = https://github.com/skarupke/flat_hash_map
@@ -13,7 +13,7 @@
 [submodule "contrib/mio"]
 	path = contrib/mio
 	url = https://github.com/vimpunk/mio.git
-[submodule "deps/paryfor"]
+[submodule "contrib/paryfor"]
   path = contrib/paryfor
   url = https://github.com/ekg/paryfor.git
 
